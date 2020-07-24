@@ -119,9 +119,9 @@ public class Mylock {
     private boolean acquire(){
 
         //先判断锁是否被持有
-        if(state == 0)
+        if(getState() == 0)
         {
-            if(!shouldPark() &&compareAndSwapInt(state,1))
+            if(!shouldPark() &&compareAndSwapInt(getState(),1))
             {
                 setLockHolder(Thread.currentThread());
                 return true;
@@ -129,7 +129,8 @@ public class Mylock {
         }
         //支持可重入
         if (Thread.currentThread().equals(getLockHolder())){
-            state++;
+            int update=getState();
+            setState(update++);
             return true;
         }
         return false;
